@@ -1,11 +1,12 @@
-const CACHE_NAME = 'tarifas-fusaya-v1';
+const CACHE_NAME = 'tarifas-fusaya-v2';
 
 const ARCHIVOS = [
   './',
   './index.html',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './fondo-fusaya.png'
 ];
 
 self.addEventListener('install', function(event) {
@@ -37,11 +38,34 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
-  if (event.request.method !== 'GET') return;
+  if (event.request.method !== 'GET') {
+    return;
+  }
 
   const url = new URL(event.request.url);
 
-  if (url.origin !== self.location.origin) return;
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
+  // Para la app principal, buscar primero la versión nueva.
+  if (
+    url.pathname.endsWith('/') ||
+    url.pathname.endsWith('/index.html') ||
+    url.pathname.endsWith('/manifest.json') ||
+    url.pathname.endsWith('/sw.js')
+  ) {
+    event.respondWith(
+      fetch(event.request)
+        .then(function(response) {
+          return response;
+        })
+        .catch(function() {
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then(function(cached) {
