@@ -2,7 +2,11 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
 
   <meta name="theme-color" content="#123b78">
   <meta name="description" content="TARIFAS FUSAYA">
@@ -24,6 +28,16 @@
   <title>TARIFAS</title>
 
   <style>
+    :root {
+      --azul: #123b78;
+      --vinotinto: #651f3d;
+      --dorado: #D4AD37;
+      --blanco: #ffffff;
+      --texto: #202633;
+      --suave: #687386;
+      --borde: #dce2eb;
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -31,93 +45,703 @@
     html,
     body {
       margin: 0;
-      width: 100%;
-      height: 100%;
-      background: #123b78;
+      min-height: 100%;
       font-family: Arial, Helvetica, sans-serif;
-      overflow: hidden;
+      color: var(--texto);
     }
 
-    #cargando {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 14px;
-      background: linear-gradient(
-        145deg,
-        #123b78 0%,
-        #123b78 48%,
-        #651f3d 100%
-      );
-      color: white;
+    body {
+      min-height: 100vh;
+      padding: 14px;
+      background:
+        linear-gradient(
+          rgba(18,59,120,.78),
+          rgba(101,31,61,.82)
+        ),
+        url('./fondo-fusaya.png') center / cover fixed no-repeat;
     }
 
-    #cargando img {
-      width: 110px;
-      height: 110px;
-      border-radius: 22px;
-      object-fit: cover;
-    }
-
-    #cargando h1 {
-      margin: 0;
-      font-size: 28px;
-      letter-spacing: 2px;
-    }
-
-    #cargando p {
-      margin: 0;
-      font-size: 14px;
-      opacity: .85;
-    }
-
-    #app {
+    .contenedor {
       width: 100%;
-      height: 100%;
-      border: 0;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .encabezado {
+      padding: 12px 10px 18px;
+      text-align: center;
+      color: var(--blanco);
+    }
+
+    .logo {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 24px;
       display: block;
+      margin: 0 auto 12px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.30);
+    }
+
+    .marca {
+      margin: 0;
+      font-size: clamp(28px, 8vw, 38px);
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-shadow: 0 3px 10px rgba(0,0,0,.28);
+    }
+
+    .linea-dorada {
+      width: 80px;
+      height: 4px;
+      margin: 11px auto;
+      border-radius: 10px;
+      background: var(--dorado);
+    }
+
+    .subtitulo {
+      margin: 0;
+      color: #eef2fa;
+      font-size: 15px;
+    }
+
+    .tarjeta {
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 20px;
+      background: rgba(255,255,255,.97);
+      box-shadow: 0 18px 45px rgba(0,0,0,.28);
+    }
+
+    .contenido {
+      padding: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 9px;
+      color: var(--azul);
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    input {
+      width: 100%;
+      min-height: 54px;
+      padding: 13px 15px;
+      border: 2px solid var(--borde);
+      border-radius: 13px;
+      outline: none;
+      color: var(--texto);
+      background: #fff;
+      font-size: 17px;
+    }
+
+    input:focus {
+      border-color: var(--azul);
+      box-shadow: 0 0 0 3px rgba(18,59,120,.12);
+    }
+
+    .estado {
+      min-height: 22px;
+      margin: 10px 2px 5px;
+      color: var(--suave);
+      font-size: 13px;
+    }
+
+    .resultados {
+      display: grid;
+      gap: 9px;
+      max-height: 48vh;
+      overflow: auto;
+      padding: 2px 1px;
+    }
+
+    .resultado {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid var(--borde);
+      border-left: 5px solid var(--dorado);
+      border-radius: 11px;
+      background: #fff;
+      color: var(--texto);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .resultado:hover,
+    .resultado:focus {
+      border-color: var(--azul);
+      background: #f6f8fc;
+      outline: none;
+    }
+
+    .nombre {
+      display: block;
+      color: var(--azul);
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .detalle {
+      display: block;
+      margin-top: 4px;
+      color: var(--suave);
+      font-size: 13px;
+    }
+
+    .precio-lista {
+      display: block;
+      margin-top: 8px;
+      color: var(--vinotinto);
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .seleccion {
+      display: none;
+      margin-top: 18px;
+      padding: 16px;
+      border: 2px solid var(--dorado);
+      border-radius: 13px;
+      background: #fffdf5;
+    }
+
+    .seleccion.visible {
+      display: block;
+    }
+
+    .seleccion-titulo {
+      margin: 0 0 8px;
+      color: var(--vinotinto);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .seleccion-lugar {
+      margin: 0;
+      color: var(--azul);
+      font-size: 20px;
+      font-weight: 900;
+      overflow-wrap: anywhere;
+    }
+
+    .seleccion-detalle {
+      margin: 6px 0 0;
+      color: var(--suave);
+      font-size: 14px;
+    }
+
+    .seleccion-precio {
+      margin: 12px 0 0;
+      color: var(--vinotinto);
+      font-size: 26px;
+      font-weight: 900;
+    }
+
+    .recargos {
+      margin: 0 14px 18px;
+      padding: 16px;
+      border: 1px solid var(--dorado);
+      border-radius: 13px;
+      background: #fffdf5;
+      text-align: left;
+    }
+
+    .recargos h2 {
+      margin: 0 0 10px;
+      color: var(--azul);
+      font-size: 17px;
+    }
+
+    .recargos .aviso {
+      margin: 0 0 10px;
+      padding: 10px 12px;
+      border-radius: 9px;
+      background: #fff4cf;
+      color: var(--vinotinto);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .recargos ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #333;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .recargos strong {
+      color: var(--vinotinto);
+    }
+
+    .error {
+      color: #a11e32;
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 9px;
+      }
+
+      .logo {
+        width: 100px;
+        height: 100px;
+      }
+
+      .contenido {
+        padding: 17px 14px;
+      }
+
+      .recargos {
+        margin: 0 10px 14px;
+        padding: 14px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div id="cargando">
-    <img src="./icon-192.png" alt="FUSAYA">
-    <h1>TARIFAS</h1>
-    <p>Cargando buscador...</p>
-  </div>
+  <main class="contenedor">
 
-  <iframe
-    id="app"
-    title="TARIFAS"
-    src="https://script.google.com/macros/s/AKfycbxkdGqpZwe1EobbY_jHQvuODXHlOZHOot0XP-F-uQkCnfYNDU8y0Yoi_o4WyU_TL18v/exec"
-  ></iframe>
+    <header class="encabezado">
+      <img
+        class="logo"
+        src="./icon-192.png"
+        alt="FUSAYA"
+      >
+
+      <h1 class="marca">TARIFAS</h1>
+
+      <div class="linea-dorada"></div>
+
+      <p class="subtitulo">
+        Consulta rápida de tarifas FUSAYA
+      </p>
+    </header>
+
+    <section class="tarjeta">
+
+      <div class="contenido">
+
+        <label for="consulta">
+          ¿A dónde necesitas ir?
+        </label>
+
+        <input
+          id="consulta"
+          type="search"
+          placeholder="Escribe un barrio, vereda o lugar..."
+          autocomplete="off"
+          aria-label="Buscar lugar"
+        >
+
+        <div
+          id="estado"
+          class="estado"
+          aria-live="polite"
+        >
+          Escribe para ver los lugares disponibles.
+        </div>
+
+        <div
+          id="resultados"
+          class="resultados"
+        ></div>
+
+        <section
+          id="seleccion"
+          class="seleccion"
+          aria-live="polite"
+        >
+          <p class="seleccion-titulo">
+            Lugar seleccionado
+          </p>
+
+          <p
+            id="seleccionLugar"
+            class="seleccion-lugar"
+          ></p>
+
+          <p
+            id="seleccionDetalle"
+            class="seleccion-detalle"
+          ></p>
+
+          <p
+            id="seleccionPrecio"
+            class="seleccion-precio"
+          ></p>
+        </section>
+
+      </div>
+
+      <section class="recargos">
+
+        <h2>Recargos y condiciones</h2>
+
+        <p class="aviso">
+          ⚠️ Todo recargo debe contar con la aprobación
+          previa de un administrador de FUSAYA para poder aplicarse.
+        </p>
+
+        <ul>
+          <li>Mandado: <strong>+$8.500</strong></li>
+          <li>Gran dimensión: <strong>+$4.000</strong></li>
+          <li>Más de 50 kg: <strong>+$4.000</strong></li>
+          <li>Pasteles: <strong>+$4.000</strong></li>
+          <li>Objetos delicados: <strong>+$3.000</strong></li>
+          <li>Lluvia: <strong>+$1.000</strong></li>
+          <li>Espera: <strong>+$1.000 por cada 10 minutos</strong></li>
+          <li>Nocturno, de 11:00 p. m. a 4:00 a. m.: <strong>+$1.000</strong></li>
+          <li>Trayecto de extremo a extremo: <strong>+$1.000</strong></li>
+          <li>Parqueadero: se cobra el valor del parqueadero si el servicio lo requiere.</li>
+        </ul>
+
+      </section>
+
+    </section>
+
+  </main>
 
   <script>
-    const iframe = document.getElementById('app');
-    const cargando = document.getElementById('cargando');
 
-    iframe.addEventListener('load', function () {
-      cargando.style.opacity = '0';
+    const API_URL =
+      'https://script.google.com/macros/s/AKfycbxkdGqpZwe1EobbY_jHQvuODXHlOZHOot0XP-F-uQkCnfYNDU8y0Yoi_o4WyU_TL18v/exec';
 
-      setTimeout(function () {
-        cargando.style.display = 'none';
-      }, 250);
+    const campo =
+      document.getElementById('consulta');
+
+    const estado =
+      document.getElementById('estado');
+
+    const resultados =
+      document.getElementById('resultados');
+
+    const seleccion =
+      document.getElementById('seleccion');
+
+    let temporizador = null;
+    let solicitud = 0;
+    let scriptAnterior = null;
+
+    campo.addEventListener('input', function () {
+
+      const texto =
+        campo.value.trim();
+
+      const idSolicitud =
+        ++solicitud;
+
+      clearTimeout(temporizador);
+
+      resultados.replaceChildren();
+
+      seleccion.classList.remove('visible');
+
+      if (scriptAnterior) {
+        scriptAnterior.remove();
+        scriptAnterior = null;
+      }
+
+      if (!texto) {
+        estado.textContent =
+          'Escribe para ver los lugares disponibles.';
+
+        estado.classList.remove('error');
+        return;
+      }
+
+      estado.textContent = 'Buscando...';
+      estado.classList.remove('error');
+
+      temporizador =
+        setTimeout(function () {
+
+          buscarConJSONP(
+            texto,
+            idSolicitud
+          );
+
+        }, 180);
+
     });
 
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('./sw.js')
-          .catch(function (error) {
-            console.log('Service Worker:', error);
-          });
+
+    function buscarConJSONP(
+      texto,
+      idSolicitud
+    ) {
+
+      const callbackName =
+        'fusayaTarifasCallback_' +
+        Date.now() +
+        '_' +
+        Math.floor(
+          Math.random() * 100000
+        );
+
+      let terminado = false;
+
+      window[callbackName] =
+        function (lista) {
+
+          terminado = true;
+
+          delete window[callbackName];
+
+          if (scriptAnterior) {
+            scriptAnterior.remove();
+            scriptAnterior = null;
+          }
+
+          if (
+            idSolicitud !== solicitud
+          ) {
+            return;
+          }
+
+          mostrarResultados(
+            Array.isArray(lista)
+              ? lista
+              : []
+          );
+        };
+
+
+      const script =
+        document.createElement('script');
+
+      script.src =
+        API_URL +
+        '?api=buscar' +
+        '&consulta=' +
+        encodeURIComponent(texto) +
+        '&prefix=' +
+        encodeURIComponent(callbackName);
+
+      script.async = true;
+
+      script.onerror =
+        function () {
+
+          if (terminado) {
+            return;
+          }
+
+          delete window[callbackName];
+
+          if (scriptAnterior) {
+            scriptAnterior.remove();
+            scriptAnterior = null;
+          }
+
+          if (
+            idSolicitud !== solicitud
+          ) {
+            return;
+          }
+
+          estado.textContent =
+            'No se pudo consultar la tarifa. Intenta nuevamente.';
+
+          estado.classList.add('error');
+        };
+
+      scriptAnterior =
+        script;
+
+      document.head.appendChild(script);
+    }
+
+
+    function mostrarResultados(lista) {
+
+      resultados.replaceChildren();
+
+      if (!lista.length) {
+
+        estado.textContent =
+          'No encontramos lugares con ese nombre.';
+
+        return;
+      }
+
+      estado.textContent =
+        lista.length === 50
+          ? 'Mostrando los primeros 50 resultados.'
+          : lista.length +
+            (
+              lista.length === 1
+                ? ' resultado.'
+                : ' resultados.'
+            );
+
+      lista.forEach(function (item) {
+
+        const boton =
+          document.createElement('button');
+
+        boton.type = 'button';
+        boton.className = 'resultado';
+
+        const nombre =
+          document.createElement('span');
+
+        nombre.className = 'nombre';
+        nombre.textContent =
+          item.lugar || '';
+
+        const detalle =
+          document.createElement('span');
+
+        detalle.className = 'detalle';
+
+        detalle.textContent =
+          [
+            item.tipo,
+            item.municipio,
+            item.zona
+          ]
+          .filter(Boolean)
+          .join(' · ') ||
+          'Zona no especificada';
+
+        const precio =
+          document.createElement('span');
+
+        precio.className =
+          'precio-lista';
+
+        precio.textContent =
+          formatearPrecio(
+            item.precio
+          );
+
+        boton.append(
+          nombre,
+          detalle,
+          precio
+        );
+
+        boton.addEventListener(
+          'click',
+          function () {
+            seleccionarLugar(item);
+          }
+        );
+
+        resultados.appendChild(
+          boton
+        );
+
       });
     }
+
+
+    function seleccionarLugar(item) {
+
+      document.getElementById(
+        'seleccionLugar'
+      ).textContent =
+        item.lugar || '';
+
+      document.getElementById(
+        'seleccionDetalle'
+      ).textContent =
+        [
+          item.tipo,
+          item.municipio,
+          item.zona
+        ]
+        .filter(Boolean)
+        .join(' · ') ||
+        'Zona no especificada';
+
+      document.getElementById(
+        'seleccionPrecio'
+      ).textContent =
+        formatearPrecio(
+          item.precio
+        );
+
+      seleccion.classList.add(
+        'visible'
+      );
+
+      estado.textContent =
+        'Tarifa del lugar seleccionado.';
+    }
+
+
+    function formatearPrecio(valor) {
+
+      const texto =
+        String(
+          valor || ''
+        ).trim();
+
+      if (!texto) {
+        return 'Precio por confirmar';
+      }
+
+      const numero =
+        Number(
+          texto
+            .replace(
+              /[^0-9,.-]/g,
+              ''
+            )
+            .replace(',', '.')
+        );
+
+      if (
+        Number.isFinite(numero) &&
+        numero > 0
+      ) {
+
+        return '$' +
+          new Intl.NumberFormat(
+            'es-CO',
+            {
+              maximumFractionDigits: 0
+            }
+          ).format(numero);
+
+      }
+
+      return texto;
+    }
+
+
+    if (
+      'serviceWorker' in navigator
+    ) {
+
+      window.addEventListener(
+        'load',
+        function () {
+
+          navigator.serviceWorker
+            .register('./sw.js')
+            .catch(function (error) {
+              console.log(
+                'Service Worker:',
+                error
+              );
+            });
+
+        }
+      );
+
+    }
+
   </script>
 
 </body>
