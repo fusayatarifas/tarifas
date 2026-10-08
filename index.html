@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="theme-color" content="#123b78">
+  <meta name="description" content="TARIFAS FUSAYA">
+
+  <link rel="manifest" href="./manifest.json">
+
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="./icon-192.png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="./icon-192.png"
+  >
+
+  <title>TARIFAS</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: #123b78;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow: hidden;
+    }
+
+    #cargando {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      background: linear-gradient(
+        145deg,
+        #123b78 0%,
+        #123b78 48%,
+        #651f3d 100%
+      );
+      color: white;
+    }
+
+    #cargando img {
+      width: 110px;
+      height: 110px;
+      border-radius: 22px;
+      object-fit: cover;
+    }
+
+    #cargando h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 2px;
+    }
+
+    #cargando p {
+      margin: 0;
+      font-size: 14px;
+      opacity: .85;
+    }
+
+    #app {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="cargando">
+    <img src="./icon-192.png" alt="FUSAYA">
+    <h1>TARIFAS</h1>
+    <p>Cargando buscador...</p>
+  </div>
+
+  <iframe
+    id="app"
+    title="TARIFAS"
+    src="https://script.google.com/macros/s/AKfycbxkdGqpZwe1EobbY_jHQvuODXHlOZHOot0XP-F-uQkCnfYNDU8y0Yoi_o4WyU_TL18v/exec"
+  ></iframe>
+
+  <script>
+    const iframe = document.getElementById('app');
+    const cargando = document.getElementById('cargando');
+
+    iframe.addEventListener('load', function () {
+      cargando.style.opacity = '0';
+
+      setTimeout(function () {
+        cargando.style.display = 'none';
+      }, 250);
+    });
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js')
+          .catch(function (error) {
+            console.log('Service Worker:', error);
+          });
+      });
+    }
+  </script>
+
+</body>
+</html>
