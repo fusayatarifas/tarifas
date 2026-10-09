@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123b78">
+<title>FUSAYA MOTOS | Cámara segura</title>
+<style>
+:root {
+  --azul:#123b78;
+  --vino:#651f3d;
+  --oro:#d4ad37;
+  --texto:#202633;
+  --gris:#687386;
+  --borde:#dce2eb;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  padding:16px;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--texto);
+  background:linear-gradient(145deg,#0c1b3f,#123b78 60%,#651f3d);
+  min-height:100vh;
+}
+.wrap { max-width:700px; margin:0 auto; }
+.cabecera {
+  text-align:center;
+  color:white;
+  padding:10px 8px 18px;
+}
+.logo { width:70px; height:70px; object-fit:contain; }
+.cabecera h1 { font-size:26px; margin:8px 0; }
+.cabecera p { font-size:13px; line-height:1.5; margin:0; }
+.card {
+  background:#fff;
+  border-radius:16px;
+  padding:18px;
+  box-shadow:0 12px 34px #0003;
+}
+.card h2 { color:var(--azul); font-size:21px; margin:0 0 8px; }
+.ayuda { color:var(--gris); font-size:13px; line-height:1.55; margin:8px 0 14px; }
+label {
+  display:block;
+  color:var(--azul);
+  font-weight:800;
+  font-size:13px;
+  margin:13px 0 6px;
+}
+select,input {
+  width:100%;
+  min-height:44px;
+  border:1px solid #cbd1dc;
+  border-radius:9px;
+  padding:10px;
+  font:inherit;
+  background:#fff;
+}
+.acciones { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+.btn { border:0; border-radius:9px; padding:12px 14px; font-weight:800; cursor:pointer; min-height:44px; }
+.azul { background:var(--azul); color:white; }
+.oro { background:var(--oro); color:#172033; }
+.suave { background:#e9edf4; color:#172033; }
+.camara { display:none; position:relative; overflow:hidden; border-radius:12px; background:#111; margin-top:14px; }
+.camara video { display:block; width:100%; max-height:65vh; object-fit:contain; }
+.marco {
+  position:absolute;
+  left:7%;
+  top:22%;
+  width:86%;
+  height:56%;
+  border:3px solid var(--oro);
+  border-radius:12px;
+  box-shadow:0 0 0 1000px #0003;
+  pointer-events:none;
+}
+.marcotexto {
+  position:absolute;
+  top:8px;
+  left:8px;
+  right:8px;
+  color:#fff;
+  text-align:center;
+  font-size:13px;
+  text-shadow:0 1px 4px #000;
+}
+.preview {
+  display:none;
+  margin-top:12px;
+  width:100%;
+  max-height:55vh;
+  object-fit:contain;
+  background:#f1f3f7;
+  border-radius:10px;
+}
+.mensaje {
+  white-space:pre-line;
+  background:#f1f3f7;
+  border-radius:9px;
+  padding:11px;
+  font-size:13px;
+  line-height:1.5;
+  margin-top:14px;
+  overflow-wrap:anywhere;
+}
+.footer { text-align:center; color:#fff; font-size:12px; padding:14px; }
+.tag {
+  display:inline-block;
+  background:#fff3cb;
+  color:#6d5310;
+  padding:5px 8px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:bold;
+}
+[hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="cabecera">
+    <img class="logo"
+      src="https://fusayatarifas.github.io/tarifas/icon-192.png"
+      alt="FUSAYA">
+    <h1>FUSAYA MOTOS</h1>
+    <p>Cámara segura de documentos</p>
+  </header>
+
+  <main class="card">
+    <h2>Capturar documento</h2>
+    <p class="ayuda">
+      Usa buena iluminación. Limpia la lente, evita sombras y reflejos
+      y coloca el documento completo dentro del marco dorado.
+      Esta página utiliza la cámara; no tiene selector de galería.
+    </p>
+
+    <span class="tag">Fotos preparadas hasta enviar el registro</span>
+
+    <label for="tipo">Documento</label>
+    <select id="tipo">
+      <option value="CÉDULA DE CIUDADANÍA">Cédula de ciudadanía</option>
+      <option value="TARJETA DE PROPIEDAD">Tarjeta de propiedad</option>
+      <option value="SOAT">SOAT</option>
+      <option value="ANTECEDENTES DEL PILOTO">Antecedentes del piloto</option>
+      <option value="LICENCIA DE CONDUCCIÓN">Licencia de conducción (opcional)</option>
+      <option value="TECNOMECÁNICA">Tecnomecánica (si aplica)</option>
+      <option value="FOTO DEL PILOTO">Fotografía del piloto (opcional)</option>
+    </select>
+
+    <label for="lado">Lado o página</label>
+    <select id="lado"></select>
+
+    <div id="grupoVencimiento">
+      <label for="vencimiento">Fecha de vencimiento</label>
+      <input id="vencimiento" type="date">
+    </div>
+
+    <label for="numero">Número del documento (si aplica)</label>
+    <input id="numero" maxlength="40" autocomplete="off"
+      placeholder="Número impreso en el documento">
+
+    <label for="observaciones">Observaciones (opcional)</label>
+    <input id="observaciones" maxlength="160"
+      placeholder="Ej. página 2">
+
+    <div class="acciones">
+      <button class="btn azul" id="activar" type="button">Activar cámara</button>
+      <button class="btn suave" id="apagar" type="button">Apagar cámara</button>
+    </div>
+
+    <div class="camara" id="camara">
+      <video id="video" autoplay playsinline muted></video>
+      <div class="marco"></div>
+      <div class="marcotexto">Alinea todo el documento dentro del marco</div>
+    </div>
+
+    <img id="preview" class="preview" alt="Vista previa de la foto capturada">
+    <canvas id="canvas" hidden></canvas>
+
+    <div class="acciones">
+      <button class="btn oro" id="capturar" type="button" disabled>Capturar foto</button>
+      <button class="btn suave" id="repetir" type="button" hidden>Repetir foto</button>
+      <button class="btn azul" id="enviar" type="button" hidden>Enviar esta foto al registro</button>
+    </div>
+
+    <div class="mensaje" id="mensaje" role="status" aria-live="polite">
+      Activa la cámara para comenzar.
+    </div>
+  </main>
+
+  <footer class="footer">
+    FUSAYA MOTOS · Documentos pendientes de verificación
+  </footer>
+</div>
+
+<script>
+(function() {
+  const $ = id => document.getElementById(id);
+  let stream = null;
+  let foto = null;
+  let parentReady = false;
+
+  function mensaje(texto) {
+    $('mensaje').textContent = texto;
+  }
+
+  const opcionesLado = {
+    'CÉDULA DE CIUDADANÍA':['FRENTE','REVERSO'],
+    'TARJETA DE PROPIEDAD':['FRENTE','REVERSO'],
+    'SOAT':['COMPLETO'],
+    'ANTECEDENTES DEL PILOTO':[
+      'PÁGINA 1','PÁGINA 2','PÁGINA 3','PÁGINA 4','PÁGINA 5',
+      'PÁGINA 6','PÁGINA 7','PÁGINA 8','PÁGINA 9','PÁGINA 10'
+    ],
+    'LICENCIA DE CONDUCCIÓN':['FRENTE','REVERSO'],
+    'TECNOMECÁNICA':['COMPLETO'],
+    'FOTO DEL PILOTO':['FOTO']
+  };
+
+  function actualizarLados() {
+    const tipo = $('tipo').value;
+    $('lado').innerHTML = '';
+
+    (opcionesLado[tipo] || ['COMPLETO']).forEach(valor => {
+      const op = document.createElement('option');
+      op.value = valor;
+      op.textContent = valor;
+      $('lado').appendChild(op);
+    });
+
+    const requiereFecha = [
+      'SOAT','LICENCIA DE CONDUCCIÓN','TECNOMECÁNICA'
+    ].includes(tipo);
+
+    $('grupoVencimiento').style.display = requiereFecha ? 'block' : 'none';
+    $('vencimiento').required = requiereFecha;
+    $('vencimiento').value = '';
+    foto = null;
+    $('preview').style.display = 'none';
+    $('capturar').hidden = false;
+    $('repetir').hidden = true;
+    $('enviar').hidden = true;
+  }
+
+  $('tipo').addEventListener('change', actualizarLados);
+
+  function apagar() {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      stream = null;
+    }
+    $('video').srcObject = null;
+    $('camara').style.display = 'none';
+    $('capturar').disabled = true;
+  }
+
+  $('activar').addEventListener('click', async function() {
+    try {
+      if (!navigator.mediaDevices ||
+          !navigator.mediaDevices.getUserMedia) {
+        mensaje('Este navegador no permite abrir la cámara. Abre esta página HTTPS en Chrome o Safari actualizado.');
+        return;
+      }
+
+      apagar();
+
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: {ideal:'environment'},
+          width: {ideal:1600},
+          height: {ideal:1200}
+        },
+        audio:false
+      });
+
+      $('video').srcObject = stream;
+      $('camara').style.display = 'block';
+      $('capturar').disabled = false;
+
+      mensaje(parentReady
+        ? 'Cámara lista. Captura la foto y envíala al formulario.'
+        : 'Cámara lista. Mantén abierta la pestaña de registro original.');
+
+    } catch (error) {
+      mensaje(
+        'No se pudo abrir la cámara. Revisa el permiso de cámara para esta página y cierra otras aplicaciones que la estén usando. Detalle: ' +
+        (error && error.message ? error.message : 'permiso denegado')
+      );
+    }
+  });
+
+  $('apagar').addEventListener('click', function() {
+    apagar();
+    mensaje('Cámara apagada.');
+  });
+
+  $('capturar').addEventListener('click', function() {
+    const video = $('video');
+
+    if (!stream || !video.videoWidth) {
+      mensaje('Activa la cámara y espera a que aparezca la imagen.');
+      return;
+    }
+
+    const tipo = $('tipo').value;
+    const requiereFecha = [
+      'SOAT','LICENCIA DE CONDUCCIÓN','TECNOMECÁNICA'
+    ].includes(tipo);
+
+    if (requiereFecha && !$('vencimiento').value) {
+      mensaje('Indica la fecha de vencimiento antes de capturar.');
+      $('vencimiento').focus();
+      return;
+    }
+
+    const canvas = $('canvas');
+    const factor = Math.min(
+      1,
+      1500 / video.videoWidth,
+      1500 / video.videoHeight
+    );
+
+    canvas.width = Math.round(video.videoWidth * factor);
+    canvas.height = Math.round(video.videoHeight * factor);
+
+    canvas.getContext('2d').drawImage(
+      video, 0, 0, canvas.width, canvas.height
+    );
+
+    foto = canvas.toDataURL('image/jpeg', 0.72);
+    $('preview').src = foto;
+    $('preview').style.display = 'block';
+    $('capturar').hidden = true;
+    $('repetir').hidden = false;
+    $('enviar').hidden = false;
+
+    mensaje('Revisa que la foto sea nítida, completa y legible. Si está borrosa, repítela.');
+  });
+
+  $('repetir').addEventListener('click', function() {
+    foto = null;
+    $('preview').style.display = 'none';
+    $('capturar').hidden = false;
+    $('repetir').hidden = true;
+    $('enviar').hidden = true;
+    mensaje('Ajusta el documento y vuelve a capturar.');
+  });
+
+  $('enviar').addEventListener('click', function() {
+    if (!foto) {
+      mensaje('Primero captura la foto.');
+      return;
+    }
+
+    if (!window.opener || window.opener.closed) {
+      mensaje('No encontramos la pestaña de registro. Déjala abierta y vuelve a abrir la cámara desde el formulario.');
+      return;
+    }
+
+    const documento = {
+      tipoDocumento: $('tipo').value,
+      lado: $('lado').value,
+      base64: foto,
+      mimeType: 'image/jpeg',
+      fechaVencimiento: $('vencimiento').value,
+      numeroDocumento: $('numero').value.trim(),
+      observaciones: $('observaciones').value.trim()
+    };
+
+    window.opener.postMessage({
+      tipo:'FUSAYA_CAMERA_PHOTO',
+      documento:documento
+    }, '*');
+
+    mensaje('Foto enviada a la pestaña de registro. Puedes elegir otro documento y capturar otra foto.');
+
+    foto = null;
+    $('preview').style.display = 'none';
+    $('capturar').hidden = false;
+    $('repetir').hidden = true;
+    $('enviar').hidden = true;
+    $('numero').value = '';
+    $('observaciones').value = '';
+  });
+
+  window.addEventListener('message', function(evento) {
+    if (!window.opener || evento.source !== window.opener) return;
+
+    if (evento.data && evento.data.tipo === 'FUSAYA_PARENT_READY') {
+      parentReady = true;
+      mensaje('Conexión lista con FUSAYA. Captura los documentos y envía cada foto al registro.');
+    }
+  });
+
+  window.addEventListener('beforeunload', apagar);
+  actualizarLados();
+
+  if (window.opener) {
+    window.opener.postMessage({tipo:'FUSAYA_CAMERA_READY'}, '*');
+  }
+})();
+</script>
+</body>
+</html>
